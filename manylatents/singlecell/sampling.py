@@ -16,8 +16,8 @@ import logging
 from typing import Optional, Tuple
 
 import numpy as np
-
-from manylatents.utils.sampling import _compute_n_samples, _subsample_dataset_metadata
+from manylatents.utils.sampling import (_compute_n_samples,
+                                        _subsample_dataset_metadata)
 
 logger = logging.getLogger(__name__)
 
