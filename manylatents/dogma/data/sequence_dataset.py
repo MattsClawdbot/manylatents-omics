@@ -5,7 +5,6 @@ Provides sequences (DNA, RNA, protein) as input for FoundationEncoders,
 integrating with manylatents DataModule pattern.
 """
 
-from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 import numpy as np
