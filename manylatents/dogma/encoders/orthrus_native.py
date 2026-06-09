@@ -14,16 +14,13 @@ References:
 
 from __future__ import annotations
 
-import math
 from functools import partial
 from typing import Dict, List, Optional, Set, Tuple, Union
 
 import torch
 import torch.nn as nn
-from torch import Tensor
-
 from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
-
+from torch import Tensor
 
 # Nucleotide vocabulary for one-hot encoding
 NUC_TO_IDX = {"A": 0, "C": 1, "G": 2, "U": 3, "T": 3, "N": 0}
@@ -76,13 +73,13 @@ class MixerModel(nn.Module):
         d_model: int,
         n_layer: int,
         input_dim: int = 4,  # One-hot RNA (A, C, G, U)
-        ssm_cfg: Optional[dict] = None,
+        ssm_cfg: dict | None = None,
         norm_epsilon: float = 1e-5,
         rms_norm: bool = False,
         fused_add_norm: bool = False,
         residual_in_fp32: bool = False,
-        device: Optional[str] = None,
-        dtype: Optional[torch.dtype] = None,
+        device: str | None = None,
+        dtype: torch.dtype | None = None,
     ):
         factory_kwargs = {"device": device, "dtype": dtype}
         super().__init__()
@@ -91,8 +88,8 @@ class MixerModel(nn.Module):
         self.embedding = nn.Linear(input_dim, d_model, **factory_kwargs)
 
         # Import mamba-ssm components (2.x API)
-        from mamba_ssm.modules.mamba_simple import Mamba
         from mamba_ssm.modules.block import Block
+        from mamba_ssm.modules.mamba_simple import Mamba
         try:
             from mamba_ssm.ops.triton.layer_norm import RMSNorm
         except ImportError:
@@ -136,8 +133,8 @@ class MixerModel(nn.Module):
 
     def forward(
         self, x: Tensor, channel_last: bool = False,
-        capture_layers: Optional[Set[int]] = None,
-    ) -> Tuple[Tensor, Dict[int, Tensor]]:
+        capture_layers: set[int] | None = None,
+    ) -> tuple[Tensor, dict[int, Tensor]]:
         """Forward pass with optional intermediate capture.
 
         Args:
@@ -154,7 +151,7 @@ class MixerModel(nn.Module):
 
         hidden_states = self.embedding(x)
         residual = None
-        intermediates: Dict[int, Tensor] = {}
+        intermediates: dict[int, Tensor] = {}
 
         for i, layer in enumerate(self.layers):
             hidden_states, residual = layer(hidden_states, residual)
@@ -169,8 +166,8 @@ class MixerModel(nn.Module):
 
     def representation(
         self, x: Tensor, lengths: Tensor, channel_last: bool = False,
-        capture_layers: Optional[Set[int]] = None,
-    ) -> Union[Tensor, Dict[str, Tensor]]:
+        capture_layers: set[int] | None = None,
+    ) -> Tensor | dict[str, Tensor]:
         """Get mean-pooled representation.
 
         Args:
@@ -230,7 +227,7 @@ class OrthrusNativeEncoder(FoundationEncoder):
         self,
         model_name: str = "quietflamingo/orthrus-base-4-track",
         device: str = "cuda",
-        layer_indices: Optional[List[int]] = None,
+        layer_indices: list[int] | None = None,
         **kwargs,
     ):
         super().__init__(device=device, **kwargs)
@@ -289,10 +286,10 @@ class OrthrusNativeEncoder(FoundationEncoder):
         return self._multi_layer
 
     @property
-    def layer_indices(self) -> Optional[List[int]]:
+    def layer_indices(self) -> list[int] | None:
         return self._layer_indices
 
-    def encode(self, sequence: str) -> Union[Tensor, Dict[str, Tensor]]:
+    def encode(self, sequence: str) -> Tensor | dict[str, Tensor]:
         """Encode an RNA sequence.
 
         Args:
