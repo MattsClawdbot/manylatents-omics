@@ -27,9 +27,8 @@ from typing import Any, Dict, Optional
 
 import numpy as np
 import pandas as pd
-from torch.utils.data import Dataset
-
 from manylatents.callbacks.embedding.base import ColormapInfo
+from torch.utils.data import Dataset
 
 logger = logging.getLogger(__name__)
 
@@ -161,7 +160,7 @@ class ManifoldGeneticsDataset(Dataset):
                 master_sample_ids = set(embed_df['sample_id'].values)
             else:
                 master_sample_ids &= set(embed_df['sample_id'].values)
-            logger.info(f"Loaded {len(embed_df)} samples with {len(embed_df.columns)-1} embedding dimensions")
+            logger.info(f"Loaded {len(embed_df)} samples with {len(embed_df.columns) - 1} embedding dimensions")
 
         # --- Load Admixture (for metrics, NOT input data) ---
         if self.admixture_paths:
@@ -260,7 +259,7 @@ class ManifoldGeneticsDataset(Dataset):
         # --- Load colormap ---
         if self.colormap_path:
             logger.info(f"Loading colormap from {self.colormap_path}")
-            with open(self.colormap_path, 'r') as f:
+            with open(self.colormap_path) as f:
                 self.colormap = json.load(f)
             if isinstance(self.colormap, dict):
                 total_colors = sum(len(v) if isinstance(v, dict) else 0 for v in self.colormap.values())
@@ -281,7 +280,7 @@ class ManifoldGeneticsDataset(Dataset):
         self.data_array = self.data_df[input_columns].values.astype(np.float32)
         logger.info(f"Final dataset: {len(self)} samples × {self.data_array.shape[1]} input features")
         logger.info(f"Admixture stored separately for {len(self.admixture_ratios)} K values (for metrics)")
-    
+
     def __len__(self) -> int:
         return len(self.data_df)
 
@@ -289,11 +288,11 @@ class ManifoldGeneticsDataset(Dataset):
     def data(self) -> np.ndarray:
         """Return data array (required by manylatents core for evaluate_embeddings)."""
         return self.data_array
-    
+
     def __getitem__(self, idx: int) -> Dict[str, Any]:
         """
         Get a single sample.
-        
+
         Returns:
             dict: {
                 'data': np.ndarray of features (PCA/admixture/embeddings),
@@ -301,15 +300,15 @@ class ManifoldGeneticsDataset(Dataset):
             }
         """
         sample_data = self.data_array[idx]
-        
+
         # Get all metadata for this sample
         metadata = self.data_df.iloc[idx].to_dict()
-        
+
         return {
             'data': sample_data,
             'metadata': metadata
         }
-    
+
     def _build_label_encoder(self, label_col: str) -> None:
         """
         Build label encoder for a specific column (lazy initialization).
@@ -412,11 +411,11 @@ class ManifoldGeneticsDataset(Dataset):
         label_col = label_col or self.label_column
         self._build_label_encoder(label_col)
         return self._label_classes[label_col]
-    
+
     def get_sample_ids(self) -> np.ndarray:
         """Get sample IDs for all samples."""
         return self.sample_ids
-    
+
     def get_colormap(self) -> Optional[Dict[str, str]]:
         """
         Get colormap for visualization.
@@ -462,7 +461,7 @@ class ManifoldGeneticsDataset(Dataset):
         label_names = {i: label for i, label in enumerate(classes)}
 
         return ColormapInfo(cmap=cmap_int, label_names=label_names, is_categorical=True)
-    
+
     @property
     def latitude(self) -> Optional[pd.Series]:
         """Get latitude coordinates if available (from labels or geographic CSV)."""

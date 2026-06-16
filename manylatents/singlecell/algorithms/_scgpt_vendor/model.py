@@ -1,14 +1,13 @@
-import gc
 import math
-from typing import Dict, Mapping, Optional, Tuple, Any, Union
+from typing import Any, Dict, Mapping, Optional, Union
 
-import torch
 import numpy as np
-from torch import nn, Tensor
+import torch
 import torch.distributed as dist
 import torch.nn.functional as F
-from torch.nn import TransformerEncoder, TransformerEncoderLayer
+from torch import Tensor, nn
 from torch.distributions import Bernoulli
+from torch.nn import TransformerEncoder, TransformerEncoderLayer
 from tqdm import trange
 
 try:
@@ -477,10 +476,10 @@ class TransformerModel(nn.Module):
 
         for i in trange(0, N, batch_size):
             raw_output = self._encode(
-                src[i : i + batch_size].to(device),
-                values[i : i + batch_size].to(device),
-                src_key_padding_mask[i : i + batch_size].to(device),
-                batch_labels[i : i + batch_size].to(device)
+                src[i: i + batch_size].to(device),
+                values[i: i + batch_size].to(device),
+                src_key_padding_mask[i: i + batch_size].to(device),
+                batch_labels[i: i + batch_size].to(device)
                 if batch_labels is not None
                 else None,
             )
@@ -491,7 +490,7 @@ class TransformerModel(nn.Module):
                 output = output.numpy()
             if time_step is not None:
                 output = output[:, time_step, :]
-            outputs[i : i + batch_size] = output
+            outputs[i: i + batch_size] = output
 
         return outputs
 
@@ -663,7 +662,7 @@ class FlashTransformerEncoderLayer(nn.Module):
         elif activation == "gelu":
             return F.gelu
 
-        raise RuntimeError("activation should be relu/gelu, not {}".format(activation))
+        raise RuntimeError(f"activation should be relu/gelu, not {activation}")
 
     def __setstate__(self, state):
         if "activation" not in state:

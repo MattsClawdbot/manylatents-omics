@@ -1,11 +1,12 @@
 """End-to-end embedding fidelity audit: embed -> cluster -> DE -> compare."""
 import logging
 
-import numpy as np
 import scanpy as sc
 
-from manylatents.singlecell.analysis.complement_set import ComplementSetAnalysis
-from manylatents.singlecell.analysis.differential_expression import DifferentialExpression
+from manylatents.singlecell.analysis.complement_set import \
+    ComplementSetAnalysis
+from manylatents.singlecell.analysis.differential_expression import \
+    DifferentialExpression
 
 logger = logging.getLogger(__name__)
 

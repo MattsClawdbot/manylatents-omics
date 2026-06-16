@@ -9,12 +9,11 @@ References:
     - HuggingFace: https://huggingface.co/EvolutionaryScale/esm3-sm-open-v1
 """
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import torch
-from torch import Tensor
-
 from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
+from torch import Tensor
 
 
 class ESM3Encoder(FoundationEncoder):

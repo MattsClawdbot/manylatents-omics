@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """Download canonical scanpy datasets as h5ad for the shapes atlas."""
 
-import os
 from pathlib import Path
 
 import anndata
