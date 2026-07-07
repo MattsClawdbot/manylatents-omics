@@ -25,9 +25,8 @@ from typing import Dict, List, Optional, Union
 
 import hydra
 import torch
-from torch import Tensor
-
 from manylatents.algorithms.latent.latent_module_base import LatentModule
+from torch import Tensor
 
 logger = logging.getLogger(__name__)
 
@@ -67,13 +66,13 @@ class BatchEncoder(LatentModule):
 
     def __init__(
         self,
-        encoder_config: Dict,
+        encoder_config: dict,
         modality: str,
         batch_size: int = 8,
         normalize: bool = False,
-        save_path: Optional[Union[str, Path]] = None,
-        n_components: Optional[int] = None,
-        channel: Optional[str] = None,
+        save_path: str | Path | None = None,
+        n_components: int | None = None,
+        channel: str | None = None,
         **kwargs,
     ):
         if modality not in ("dna", "rna", "protein"):
@@ -206,7 +205,7 @@ class BatchEncoder(LatentModule):
         return embeddings
 
     @staticmethod
-    def _scatter_one(v: Tensor, valid_indices: List[int], total: int) -> Tensor:
+    def _scatter_one(v: Tensor, valid_indices: list[int], total: int) -> Tensor:
         """Place valid results into a full-sized zero tensor."""
         full = torch.zeros(total, v.shape[1])
         for j, idx in enumerate(valid_indices):
@@ -215,10 +214,10 @@ class BatchEncoder(LatentModule):
 
     def _scatter_into_full(
         self,
-        result: Union[Tensor, Dict[str, Tensor]],
-        valid_indices: List[int],
+        result: Tensor | dict[str, Tensor],
+        valid_indices: list[int],
         total: int,
-    ) -> Union[Tensor, Dict[str, Tensor]]:
+    ) -> Tensor | dict[str, Tensor]:
         """Scatter valid results into full-sized tensors, zero-filling gaps."""
         if len(valid_indices) == total:
             return result
@@ -236,7 +235,7 @@ class BatchEncoder(LatentModule):
                 save_dict["labels"] = self.datamodule.get_labels()
         return save_dict
 
-    def _save_multi_layer(self, embeddings_dict: Dict[str, Tensor]) -> None:
+    def _save_multi_layer(self, embeddings_dict: dict[str, Tensor]) -> None:
         """Save each layer's embeddings as a separate .pt file.
 
         For save_path='results/wt_dna.pt' and layer 'blocks.19.mlp.l3',
