@@ -25,7 +25,8 @@ def _make_test_adata(n_cells=200, n_genes=50, n_clusters=3, seed=42):
 
 class TestDifferentialExpression:
     def test_run_returns_dataframe(self):
-        from manylatents.singlecell.analysis.differential_expression import DifferentialExpression
+        from manylatents.singlecell.analysis.differential_expression import \
+            DifferentialExpression
         adata = _make_test_adata()
         de = DifferentialExpression(method="wilcoxon")
         df = de.run(adata, groupby="cluster")
@@ -36,7 +37,8 @@ class TestDifferentialExpression:
         assert len(df) > 0
 
     def test_get_significant_genes(self):
-        from manylatents.singlecell.analysis.differential_expression import DifferentialExpression
+        from manylatents.singlecell.analysis.differential_expression import \
+            DifferentialExpression
         adata = _make_test_adata()
         de = DifferentialExpression(method="wilcoxon", p_threshold=0.05, lfc_threshold=0.5)
         de.run(adata, groupby="cluster")
@@ -45,7 +47,8 @@ class TestDifferentialExpression:
         assert len(genes) > 0
 
     def test_boosted_genes_detected(self):
-        from manylatents.singlecell.analysis.differential_expression import DifferentialExpression
+        from manylatents.singlecell.analysis.differential_expression import \
+            DifferentialExpression
         adata = _make_test_adata(n_cells=300)
         de = DifferentialExpression(method="wilcoxon", p_threshold=0.05, lfc_threshold=1.0)
         de.run(adata, groupby="cluster")

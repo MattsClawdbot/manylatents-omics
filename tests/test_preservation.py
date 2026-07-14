@@ -8,11 +8,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from manylatents.popgen.metrics.preservation import (
-    AdmixturePreservation,
-    GeographicPreservation,
-)
-
+from manylatents.popgen.metrics.preservation import (AdmixturePreservation,
+                                                     GeographicPreservation)
 
 # ---------------------------------------------------------------------------
 # Fixtures

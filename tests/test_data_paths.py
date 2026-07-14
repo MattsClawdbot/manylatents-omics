@@ -4,7 +4,6 @@ Regression coverage for issue #47: ``${omics_data:}`` resolved to a
 non-existent ``site-packages/data`` path when the package was installed as a
 non-editable wheel.
 """
-from pathlib import Path
 
 from omegaconf import OmegaConf
 

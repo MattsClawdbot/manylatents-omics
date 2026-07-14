@@ -27,10 +27,9 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-
 from manykinds import LabeledArray
-from manylatents.singlecell.data.manifests import select_random_tenx
 
+from manylatents.singlecell.data.manifests import select_random_tenx
 
 # ==============================================================================
 # Malformed-dataset rejection — bad data is refused at ingestion, not passed on.
@@ -100,7 +99,8 @@ class TestMalformedDatasetRejected:
 
     def test_from_anndata_rejects_empty_directly(self):
         # The adapter itself refuses a zero-size matrix via LabeledArray.validate.
-        from manylatents.singlecell.data.adapters.formats.adapters import from_anndata
+        from manylatents.singlecell.data.adapters.formats.adapters import \
+            from_anndata
 
         adata = _fabricated_adata(n_cells=3, n_genes=0)
         with pytest.raises(ValueError, match="empty"):

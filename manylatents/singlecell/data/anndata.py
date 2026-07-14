@@ -78,7 +78,6 @@ class AnnDataModule(LightningDataModule):
 
     def prepare_data(self) -> None:
         """Prepare data (download, etc.). Called only on rank 0."""
-        pass
 
     def setup(self, stage: Optional[str] = None) -> None:
         """Set up datasets for training/testing."""
