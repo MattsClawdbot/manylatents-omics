@@ -12,9 +12,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import torch
-from torch import Tensor
-
 from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
+from torch import Tensor
 
 
 class AlphaGenomeEncoder(FoundationEncoder):
@@ -112,6 +111,7 @@ class AlphaGenomeEncoder(FoundationEncoder):
         instead, which provides equivalent functionality.
         """
         import functools
+
         import jax
 
         # Check if jax.memory exists
@@ -215,9 +215,7 @@ class AlphaGenomeEncoder(FoundationEncoder):
             JAX array of embeddings, mean-pooled over sequence length.
             Shape: (1, embedding_dim)
         """
-        import jax
         import jax.numpy as jnp
-        import numpy as np
 
         # Get raw model output by calling internal apply_fn
         # AlphaGenome's public API filters out embeddings, so we need to call
@@ -261,15 +259,14 @@ class AlphaGenomeEncoder(FoundationEncoder):
         Returns:
             Dict of raw predictions including embeddings_1bp.
         """
-        import functools
 
         import haiku as hk
         import jax
         import jax.numpy as jnp
         import jmp
-        import numpy as np
         from alphagenome_research.model import model as ag_model
-        from alphagenome_research.model.metadata import metadata as metadata_lib
+        from alphagenome_research.model.metadata import \
+            metadata as metadata_lib
 
         # Lazy-create the raw prediction function
         if not hasattr(self, "_raw_predict_fn"):
@@ -417,7 +414,7 @@ class AlphaGenomeEncoder(FoundationEncoder):
         step = chunk_size - overlap
         chunks = []
         for i in range(0, len(sequence), step):
-            chunk = sequence[i : i + chunk_size]
+            chunk = sequence[i: i + chunk_size]
             if len(chunk) > 0:
                 chunks.append(chunk)
         return chunks

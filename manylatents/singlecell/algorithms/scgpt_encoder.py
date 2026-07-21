@@ -26,9 +26,8 @@ from typing import Optional, Union
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader, SequentialSampler
-
 from manylatents.algorithms.latent.latent_module_base import LatentModule
+from torch.utils.data import DataLoader, SequentialSampler
 
 from ._scgpt_vendor.data_collator import DataCollator
 from ._scgpt_vendor.model import TransformerModel
@@ -129,7 +128,7 @@ class ScGPTEncoder(LatentModule):
                 self._vocab.append_token(s)
 
         # Model config
-        with open(config_file, "r") as f:
+        with open(config_file) as f:
             self._model_configs = json.load(f)
 
         self.n_components = self._model_configs["embsize"]
@@ -316,7 +315,7 @@ class ScGPTEncoder(LatentModule):
                 )
                 # CLS token is at position 0
                 embeddings = embeddings[:, 0, :].cpu().numpy()
-                cell_embeddings[count : count + len(embeddings)] = embeddings
+                cell_embeddings[count: count + len(embeddings)] = embeddings
                 count += len(embeddings)
 
         # L2-normalize (same as scGPT's embed_data)

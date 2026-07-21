@@ -1,9 +1,6 @@
 """Genetics-specific evaluation metrics"""
 
-from .preservation import (
-    GeographicPreservation,
-    AdmixturePreservation,
-)
+from .preservation import AdmixturePreservation, GeographicPreservation
 from .sample_id import SampleId
 
 # GroundTruthPreservation has been moved to core manylatents.metrics.preservation

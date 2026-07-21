@@ -1,6 +1,7 @@
 """Tests for VariantDataModule - paired WT/MUT sequence loading."""
-import pytest
 from pathlib import Path
+
+import pytest
 
 # Data directory for existing ClinVar files
 DATA_DIR = Path(__file__).parents[5] / "data" / "clinvar"

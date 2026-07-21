@@ -13,11 +13,8 @@ def test_dogma_package_import():
 
 def test_encoder_module_imports():
     """Test that all encoder classes can be imported."""
-    from manylatents.dogma.encoders import (
-        ESM3Encoder,
-        OrthrusEncoder,
-        Evo2Encoder,
-    )
+    from manylatents.dogma.encoders import (ESM3Encoder, Evo2Encoder,
+                                            OrthrusEncoder)
 
     # Verify they're all defined
     assert ESM3Encoder is not None
@@ -38,11 +35,8 @@ def test_namespace_package_structure():
 
 def test_encoder_modalities():
     """Test that encoders have correct modalities defined."""
-    from manylatents.dogma.encoders import (
-        ESM3Encoder,
-        OrthrusEncoder,
-        Evo2Encoder,
-    )
+    from manylatents.dogma.encoders import (ESM3Encoder, Evo2Encoder,
+                                            OrthrusEncoder)
 
     # Check modality without instantiating (would require model loading)
     # These are class attributes
@@ -53,16 +47,17 @@ def test_encoder_modalities():
 
 def test_foundation_encoder_base_accessible():
     """Test that FoundationEncoder base class can be imported from dogma."""
-    from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
+    from manylatents.algorithms.latent.foundation_encoder import \
+        FoundationEncoder
 
     assert FoundationEncoder is not None
 
 
 def test_core_manylatents_still_accessible():
     """Test that core manylatents can still be imported with dogma installed."""
+    import manylatents.metrics.trustworthiness as trustworthiness_module
     from manylatents.data.synthetic_dataset import SwissRoll
     from manylatents.data.test_data import TestDataset
-    import manylatents.metrics.trustworthiness as trustworthiness_module
 
     assert SwissRoll is not None
     assert TestDataset is not None
@@ -71,8 +66,8 @@ def test_core_manylatents_still_accessible():
 
 def test_popgen_and_dogma_coexist():
     """Test that both popgen and dogma can be imported together."""
-    import manylatents.popgen
     import manylatents.dogma
+    import manylatents.popgen
 
     assert manylatents.popgen.__version__ == "0.1.0"
     assert manylatents.dogma.__version__ == "0.1.0"

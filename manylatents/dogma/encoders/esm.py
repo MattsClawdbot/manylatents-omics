@@ -23,10 +23,8 @@ References:
 from typing import List, Optional
 
 import torch
-from torch import Tensor
-
 from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
-
+from torch import Tensor
 
 # Model registry: name → (num_layers, embedding_dim)
 _ESM_MODELS = {
@@ -143,7 +141,7 @@ class ESMEncoder(FoundationEncoder):
         token_repr = results["representations"][self.repr_layer]  # (1, L, D)
         # Mean-pool over residue positions, excluding BOS (0) and EOS/PAD
         seq_len = (batch_tokens != self._alphabet.padding_idx).sum(1)
-        embedding = token_repr[0, 1 : seq_len[0] - 1].mean(0, keepdim=True)
+        embedding = token_repr[0, 1: seq_len[0] - 1].mean(0, keepdim=True)
         return embedding
 
     # --- Batched inference ---

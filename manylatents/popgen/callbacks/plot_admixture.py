@@ -5,10 +5,11 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
 import wandb
 from manylatents.callbacks.embedding.plot_embeddings import PlotEmbeddings
-from manylatents.popgen.data.manifold_genetics_dataset import ManifoldGeneticsDataset
+
+from manylatents.popgen.data.manifold_genetics_dataset import \
+    ManifoldGeneticsDataset
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +56,7 @@ class PlotAdmixture(PlotEmbeddings):
             legend=legend,
             alpha=alpha,
         )
-        
+
         self.admixture_K = admixture_K
         self.figsize_per_plot = figsize_per_plot
         self.point_size = point_size
@@ -103,11 +104,11 @@ class PlotAdmixture(PlotEmbeddings):
     def _plot_embeddings(self, dataset: any, embeddings_to_plot: np.ndarray, color_array: np.ndarray) -> str:
         """Override parent to create admixture subplot grid."""
         has_admixture, admixture_df = self._check_admixture_available(dataset)
-        
+
         if not has_admixture:
             logger.error("Cannot plot admixture: no valid data available")
             return super()._plot_embeddings(dataset, embeddings_to_plot, color_array)
-        
+
         return self._plot_admixture_grid(embeddings_to_plot, admixture_df)
 
     def _plot_admixture_grid(self, embeddings_2d: np.ndarray, admixture_df: pd.DataFrame) -> str:
@@ -144,7 +145,7 @@ class PlotAdmixture(PlotEmbeddings):
             ax.set_ylabel('')
             ax.set_xticks([])
             ax.set_yticks([])
-            ax.set_title(f'Component {idx+1} proportion', fontsize=13)
+            ax.set_title(f'Component {idx + 1} proportion', fontsize=13)
             plt.colorbar(scatter, ax=ax, label='Proportion')
 
         for idx in range(K, len(axes)):

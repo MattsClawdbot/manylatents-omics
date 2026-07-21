@@ -12,7 +12,7 @@ Example:
     >>> print(sequences.keys())  # dict_keys(['dna', 'rna', 'protein'])
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 import numpy as np
 import torch
