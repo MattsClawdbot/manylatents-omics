@@ -53,11 +53,13 @@ class TestEncoderProperties:
 
     def test_orthrus_4track_embedding_dim(self):
         from manylatents.dogma.encoders import OrthrusEncoder
+
         # 4-track model has 256-dim embeddings
         assert OrthrusEncoder.MODEL_CONFIGS["quietflamingo/orthrus-base-4-track"]["d_model"] == 256
 
     def test_orthrus_6track_embedding_dim(self):
         from manylatents.dogma.encoders import OrthrusEncoder
+
         # 6-track model has 512-dim embeddings
         assert OrthrusEncoder.MODEL_CONFIGS["quietflamingo/orthrus-large-6-track"]["d_model"] == 512
 
@@ -89,18 +91,24 @@ class TestFoundationEncoderInterface:
     """Test that encoders inherit from FoundationEncoder correctly."""
 
     def test_esm3_inherits_foundation_encoder(self):
+        from manylatents.algorithms.latent.foundation_encoder import \
+            FoundationEncoder
+
         from manylatents.dogma.encoders import ESM3Encoder
-        from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
         assert issubclass(ESM3Encoder, FoundationEncoder)
 
     def test_orthrus_inherits_foundation_encoder(self):
+        from manylatents.algorithms.latent.foundation_encoder import \
+            FoundationEncoder
+
         from manylatents.dogma.encoders import OrthrusEncoder
-        from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
         assert issubclass(OrthrusEncoder, FoundationEncoder)
 
     def test_evo2_inherits_foundation_encoder(self):
+        from manylatents.algorithms.latent.foundation_encoder import \
+            FoundationEncoder
+
         from manylatents.dogma.encoders import Evo2Encoder
-        from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
         assert issubclass(Evo2Encoder, FoundationEncoder)
 
 
@@ -183,7 +191,8 @@ class TestCentralDogmaConsistency:
     def test_encode_same_gene_all_modalities(self):
         """Encode the same gene at DNA, RNA, and protein levels."""
         pytest.importorskip("esm")
-        from manylatents.dogma.encoders import ESM3Encoder, OrthrusEncoder, Evo2Encoder
+        from manylatents.dogma.encoders import (ESM3Encoder, Evo2Encoder,
+                                                OrthrusEncoder)
 
         esm3 = ESM3Encoder(device="cuda")
         orthrus = OrthrusEncoder(device="cuda")
@@ -248,7 +257,8 @@ class TestFoundationEncoderBatchDict:
 
     def test_encode_batch_with_dict_encoder(self):
         """Mock encoder returning dicts should produce dict output from encode_batch."""
-        from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
+        from manylatents.algorithms.latent.foundation_encoder import \
+            FoundationEncoder
 
         class MockMultiLayerEncoder(FoundationEncoder):
             def __init__(self):
@@ -276,7 +286,8 @@ class TestFoundationEncoderBatchDict:
 
     def test_encode_batch_with_tensor_encoder(self):
         """Single-layer encoder should still return flat tensor."""
-        from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
+        from manylatents.algorithms.latent.foundation_encoder import \
+            FoundationEncoder
 
         class MockSingleEncoder(FoundationEncoder):
             def __init__(self):
@@ -385,6 +396,7 @@ class TestESM3PerLayer:
     @staticmethod
     def _fake_model(d=8, n=6):
         import types
+
         import torch.nn as nn
 
         class FakeBlock(nn.Module):

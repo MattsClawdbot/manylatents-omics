@@ -21,7 +21,7 @@ def temp_manifold_split_data():
     """Create temporary directory with fit/transform split data."""
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir = Path(tmpdir)
-        
+
         # Training samples (fit) - use dim_1, dim_2 column names
         fit_sample_ids = [f"train_{i:03d}" for i in range(80)]
         fit_pca_data = {
@@ -31,7 +31,7 @@ def temp_manifold_split_data():
         }
         fit_pca_path = tmpdir / "fit_pca.csv"
         pd.DataFrame(fit_pca_data).to_csv(fit_pca_path, index=False)
-        
+
         # Admixture for training (use component_i format)
         fit_admix_data = {
             'sample_id': fit_sample_ids,
@@ -41,7 +41,7 @@ def temp_manifold_split_data():
         }
         fit_admix_path = tmpdir / "fit.K3.csv"
         pd.DataFrame(fit_admix_data).to_csv(fit_admix_path, index=False)
-        
+
         # Test samples (transform) - use dim_1, dim_2 column names
         transform_sample_ids = [f"test_{i:03d}" for i in range(20)]
         transform_pca_data = {
@@ -51,7 +51,7 @@ def temp_manifold_split_data():
         }
         transform_pca_path = tmpdir / "transform_pca.csv"
         pd.DataFrame(transform_pca_data).to_csv(transform_pca_path, index=False)
-        
+
         # Admixture for test (use component_i format)
         transform_admix_data = {
             'sample_id': transform_sample_ids,
@@ -61,7 +61,7 @@ def temp_manifold_split_data():
         }
         transform_admix_path = tmpdir / "transform.K3.csv"
         pd.DataFrame(transform_admix_data).to_csv(transform_admix_path, index=False)
-        
+
         # Labels for all samples
         all_sample_ids = fit_sample_ids + transform_sample_ids
         labels_data = {
@@ -70,7 +70,7 @@ def temp_manifold_split_data():
         }
         labels_path = tmpdir / "labels.csv"
         pd.DataFrame(labels_data).to_csv(labels_path, index=False)
-        
+
         # Colormap (nested by label type)
         colormap = {
             'Population': {
@@ -82,7 +82,7 @@ def temp_manifold_split_data():
         colormap_path = tmpdir / "colormap.json"
         with open(colormap_path, 'w') as f:
             json.dump(colormap, f)
-        
+
         yield {
             'fit_pca_path': str(fit_pca_path),
             'transform_pca_path': str(transform_pca_path),
@@ -167,13 +167,13 @@ def test_datamodule_dataloaders(temp_manifold_split_data):
         test_pca_path=temp_manifold_split_data['transform_pca_path'],
         labels_path=temp_manifold_split_data['labels_path'],
     )
-    
+
     datamodule.setup()
-    
+
     # Test train dataloader
     train_loader = datamodule.train_dataloader()
     assert train_loader.batch_size == 8
-    
+
     # Test getting a batch
     batch = next(iter(train_loader))
     assert 'data' in batch
@@ -181,11 +181,11 @@ def test_datamodule_dataloaders(temp_manifold_split_data):
     assert batch['data'].shape[0] <= 8  # Batch size
     assert isinstance(batch['data'], torch.Tensor)
     assert batch['data'].dtype == torch.float32
-    
+
     # Test val dataloader
     val_loader = datamodule.val_dataloader()
     assert val_loader is not None
-    
+
     # Test test dataloader
     test_loader = datamodule.test_dataloader()
     assert test_loader is not None
@@ -204,10 +204,10 @@ def test_datamodule_shuffle_train(temp_manifold_split_data):
         labels_path=temp_manifold_split_data['labels_path'],
         shuffle_traindata=True,
     )
-    
+
     datamodule.setup()
     train_loader = datamodule.train_dataloader()
-    
+
     # The DataLoader should have shuffle=True
     # We can't directly check this, but we verify it was created successfully
     assert train_loader is not None
@@ -224,7 +224,7 @@ def test_datamodule_no_shuffle_train(temp_manifold_split_data):
         labels_path=temp_manifold_split_data['labels_path'],
         shuffle_traindata=False,
     )
-    
+
     datamodule.setup()
     train_loader = datamodule.train_dataloader()
     assert train_loader is not None
@@ -238,7 +238,7 @@ def test_datamodule_invalid_mode(temp_manifold_split_data):
         mode='invalid_mode',
         train_pca_path=temp_manifold_split_data['fit_pca_path'],
     )
-    
+
     with pytest.raises(ValueError, match="Invalid mode"):
         datamodule.setup()
 
@@ -251,7 +251,7 @@ def test_datamodule_with_multiple_admixture_k(temp_manifold_split_data):
     train_sample_ids = [f"train_{i:03d}" for i in range(80)]
     train_admix_k5_data = {
         'sample_id': train_sample_ids,
-        **{f'component_{i}': np.random.dirichlet([1]*5, 80)[:, i-1] for i in range(1, 6)}
+        **{f'component_{i}': np.random.dirichlet([1] * 5, 80)[:, i - 1] for i in range(1, 6)}
     }
     train_admix_k5_path = tmpdir / "train.K5.csv"
     pd.DataFrame(train_admix_k5_data).to_csv(train_admix_k5_path, index=False)
@@ -259,7 +259,7 @@ def test_datamodule_with_multiple_admixture_k(temp_manifold_split_data):
     test_sample_ids = [f"test_{i:03d}" for i in range(20)]
     test_admix_k5_data = {
         'sample_id': test_sample_ids,
-        **{f'component_{i}': np.random.dirichlet([1]*5, 20)[:, i-1] for i in range(1, 6)}
+        **{f'component_{i}': np.random.dirichlet([1] * 5, 20)[:, i - 1] for i in range(1, 6)}
     }
     test_admix_k5_path = tmpdir / "test.K5.csv"
     pd.DataFrame(test_admix_k5_data).to_csv(test_admix_k5_path, index=False)
@@ -303,22 +303,22 @@ def test_datamodule_collate_fn(temp_manifold_split_data):
         test_pca_path=temp_manifold_split_data['transform_pca_path'],
         labels_path=temp_manifold_split_data['labels_path'],
     )
-    
+
     datamodule.setup()
-    
+
     # Get a batch
     batch = next(iter(datamodule.train_dataloader()))
-    
+
     # Check batch structure
     assert isinstance(batch, dict)
     assert 'data' in batch
     assert 'metadata' in batch
-    
+
     # Check data tensor
     assert isinstance(batch['data'], torch.Tensor)
     assert batch['data'].dtype == torch.float32
     assert len(batch['data'].shape) == 2  # (batch_size, features)
-    
+
     # Check metadata
     assert isinstance(batch['metadata'], list)
     assert len(batch['metadata']) == batch['data'].shape[0]

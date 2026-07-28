@@ -36,9 +36,8 @@ from typing import Dict, Optional
 
 import hydra
 import torch
-from torch import Tensor
-
 from manylatents.algorithms.latent.latent_module_base import LatentModule
+from torch import Tensor
 
 
 @dataclass

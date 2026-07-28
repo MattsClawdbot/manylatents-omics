@@ -38,13 +38,10 @@ Example (learned fusion):
     >>> fused = fusion.fit_transform(dummy)
 """
 
-from .fusion import CentralDogmaFusion, CentralDogmaEmbeddings
 from .batch_encoder import BatchEncoder
-from .learned_fusion import (
-    AutoencoderFusion,
-    FrobeniusAEFusion,
-    LearnedFusionLoadings,
-)
+from .fusion import CentralDogmaEmbeddings, CentralDogmaFusion
+from .learned_fusion import (AutoencoderFusion, FrobeniusAEFusion,
+                             LearnedFusionLoadings)
 
 __all__ = [
     "CentralDogmaFusion",

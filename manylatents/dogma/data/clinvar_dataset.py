@@ -26,7 +26,7 @@ from lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset
 
 
-def parse_fasta(fasta_path: Path) -> Dict[str, str]:
+def parse_fasta(fasta_path: Path) -> dict[str, str]:
     """Parse FASTA file into dict of id -> sequence."""
     sequences = {}
     current_id = None
@@ -59,12 +59,12 @@ class ClinVarDataset(Dataset):
 
     def __init__(
         self,
-        variant_ids: List[str],
-        dna_sequences: Dict[str, str],
-        rna_sequences: Dict[str, str],
-        protein_sequences: Dict[str, str],
+        variant_ids: list[str],
+        dna_sequences: dict[str, str],
+        rna_sequences: dict[str, str],
+        protein_sequences: dict[str, str],
         labels: np.ndarray,
-        metadata: Optional[Dict[str, List]] = None,
+        metadata: dict[str, list] | None = None,
     ):
         """
         Args:
@@ -85,7 +85,7 @@ class ClinVarDataset(Dataset):
     def __len__(self) -> int:
         return len(self.variant_ids)
 
-    def __getitem__(self, idx: int) -> Dict:
+    def __getitem__(self, idx: int) -> dict:
         var_id = self.variant_ids[idx]
         return {
             "variant_id": var_id,
@@ -119,10 +119,10 @@ class ClinVarDataModule(LightningDataModule):
 
     def __init__(
         self,
-        data_dir: Union[str, Path],
-        genes: Optional[List[str]] = None,
+        data_dir: str | Path,
+        genes: list[str] | None = None,
         pathogenicity: str = "all",
-        max_variants: Optional[int] = None,
+        max_variants: int | None = None,
         batch_size: int = 32,
     ):
         super().__init__()
@@ -135,14 +135,14 @@ class ClinVarDataModule(LightningDataModule):
         self.batch_size = batch_size
 
         # Will be populated in setup()
-        self._variant_ids: List[str] = []
-        self._dna_sequences: Dict[str, str] = {}
-        self._rna_sequences: Dict[str, str] = {}
-        self._protein_sequences: Dict[str, str] = {}
+        self._variant_ids: list[str] = []
+        self._dna_sequences: dict[str, str] = {}
+        self._rna_sequences: dict[str, str] = {}
+        self._protein_sequences: dict[str, str] = {}
         self._labels: np.ndarray = np.array([])
-        self._metadata: Dict[str, List] = {}
+        self._metadata: dict[str, list] = {}
 
-        self.dataset: Optional[ClinVarDataset] = None
+        self.dataset: ClinVarDataset | None = None
 
     def _load_variants_tsv(self) -> None:
         """Load and filter variants from TSV file."""
@@ -209,7 +209,7 @@ class ClinVarDataModule(LightningDataModule):
         self._labels = np.array(labels, dtype=np.int64)
         self._metadata = metadata
 
-    def setup(self, stage: Optional[str] = None) -> None:
+    def setup(self, stage: str | None = None) -> None:
         """Load data from files."""
         # Load variant metadata first (for filtering)
         self._load_variants_tsv()
@@ -266,7 +266,7 @@ class ClinVarDataModule(LightningDataModule):
         )
 
     @staticmethod
-    def _collate_fn(batch: List[Dict]) -> Dict:
+    def _collate_fn(batch: list[dict]) -> dict:
         """Collate batch of items into batched dict."""
         return {
             "variant_ids": [item["variant_id"] for item in batch],
@@ -276,7 +276,7 @@ class ClinVarDataModule(LightningDataModule):
             "labels": torch.tensor([item["label"] for item in batch]),
         }
 
-    def get_sequences(self) -> Dict[str, List[str]]:
+    def get_sequences(self) -> dict[str, list[str]]:
         """Return dict with lists of sequences for each modality.
 
         This is the primary interface for batch encoding.
@@ -294,7 +294,7 @@ class ClinVarDataModule(LightningDataModule):
             "protein": [self._protein_sequences.get(v, "") for v in self._variant_ids],
         }
 
-    def get_variant_ids(self) -> List[str]:
+    def get_variant_ids(self) -> list[str]:
         """Return list of variant IDs in order."""
         if self.dataset is None:
             self.setup()
@@ -306,7 +306,7 @@ class ClinVarDataModule(LightningDataModule):
             self.setup()
         return self._labels
 
-    def get_metadata(self) -> Dict[str, List]:
+    def get_metadata(self) -> dict[str, list]:
         """Return metadata dict with lists aligned to variant_ids."""
         if self.dataset is None:
             self.setup()
