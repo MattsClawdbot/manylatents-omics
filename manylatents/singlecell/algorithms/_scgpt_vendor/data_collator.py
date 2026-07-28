@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from typing import Any, Dict, List, Mapping, Optional, Tuple, Union
+from typing import Dict, List, Mapping, Optional, Tuple
 
 import torch
-import numpy as np
 
 from .preprocess import binning
 
@@ -85,8 +84,8 @@ class DataCollator:
             genes = examples[i]["genes"]
             expressions = examples[i]["expressions"]
             if self.do_binning:
-                expressions[self.keep_first_n_tokens :] = binning(
-                    row=expressions[self.keep_first_n_tokens :],
+                expressions[self.keep_first_n_tokens:] = binning(
+                    row=expressions[self.keep_first_n_tokens:],
                     n_bins=51,
                 )
             genes, expressions = self._sample_or_truncate_plus_pad(

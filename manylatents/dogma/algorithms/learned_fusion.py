@@ -24,10 +24,9 @@ from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 import torch
 import torch.nn as nn
+from manylatents.algorithms.latent.latent_module_base import LatentModule
 from torch import Tensor
 from torch.utils.data import DataLoader, TensorDataset
-
-from manylatents.algorithms.latent.latent_module_base import LatentModule
 
 
 @dataclass

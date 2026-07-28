@@ -19,10 +19,9 @@ import sparse
 
 ad = pytest.importorskip("anndata")
 import pandas as pd
-
 from manykinds import LabeledArray
-from manylatents.singlecell.data.adapters.formats.adapters import from_anndata
 
+from manylatents.singlecell.data.adapters.formats.adapters import from_anndata
 
 # Non-square on purpose: with N_CELLS != N_GENES a transposed or mis-mapped
 # axis fails loudly (coord-length mismatch) instead of silently passing.
