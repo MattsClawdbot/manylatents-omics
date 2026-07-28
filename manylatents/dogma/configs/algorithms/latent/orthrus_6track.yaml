@@ -1,4 +1,10 @@
-# Orthrus RNA encoder, 6-track variant (inference only)
+# Orthrus RNA encoder, 6-track large variant (inference only)
+#
+# This config has never actually loaded the 6-track model. It set `n_tracks: 6`, which
+# OrthrusNativeEncoder does not declare, so it was swallowed by **kwargs — and with no
+# `model_name` set, the encoder fell back to its default `orthrus-base-4-track`. The file was
+# therefore functionally identical to orthrus.yaml for its entire life. `model_name` is the
+# real selector (see MODEL_CONFIGS: 6-track is d_model 512, n_layer 12, input_dim 6).
 _target_: manylatents.dogma.encoders.OrthrusEncoder
-n_tracks: 6
+model_name: quietflamingo/orthrus-large-6-track
 device: cuda
