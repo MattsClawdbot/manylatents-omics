@@ -24,13 +24,20 @@ evo2_config:
   layer_name: null  # Uses default middle layer
   device: cuda
 
-# Orthrus RNA encoder configuration (loads precomputed embeddings)
-# Due to mamba-ssm version conflict, Orthrus embeddings must be precomputed.
-# See tools/orthrus-embed/README.md for instructions.
+# Orthrus RNA encoder configuration.
+#
+# NOTE: `cache_dir` and `embedding_dim` were declared here and neither exists on
+# OrthrusEncoder — `cache_dir` appears nowhere in the class, and `embedding_dim` is a
+# read-only property derived from MODEL_CONFIGS. Both were swallowed by **kwargs, so the
+# precomputed-embedding path the old comment described was never taken: this config has always
+# instantiated the LIVE encoder. Removing them changes no behaviour; it stops the config
+# claiming a capability the code does not have.
+#
+# The mamba-ssm conflict with Evo2 that motivated precomputing is real and unresolved. If the
+# cached path is wanted, OrthrusEncoder needs to grow it (see tools/orthrus-embed/README.md).
 orthrus_config:
   _target_: manylatents.dogma.encoders.OrthrusEncoder
-  cache_dir: /network/scratch/c/cesar.valdez/embeddings/orthrus
-  embedding_dim: 256  # 4-track model
+  model_name: quietflamingo/orthrus-base-4-track
   device: cuda
 
 # ESM3 Protein encoder configuration

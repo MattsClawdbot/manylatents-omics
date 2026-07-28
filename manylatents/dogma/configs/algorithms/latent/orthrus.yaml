@@ -1,4 +1,9 @@
-# Orthrus RNA encoder (inference only)
+# Orthrus RNA encoder, 4-track base variant (inference only)
+#
+# `model_name` is what selects the variant: OrthrusNativeEncoder.MODEL_CONFIGS maps it to
+# d_model / n_layer / input_dim. This config previously set `n_tracks: 4` instead, which the
+# encoder does not declare — it landed in **kwargs and was silently dropped, so the variant
+# was never selected here at all and the default was doing the work.
 _target_: manylatents.dogma.encoders.OrthrusEncoder
-n_tracks: 4
+model_name: quietflamingo/orthrus-base-4-track
 device: cuda

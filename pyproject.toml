@@ -94,10 +94,11 @@ name = "heatgeo"
 version = "0.0.1"
 requires-dist = ["numpy>=1.23"]
 
-[[tool.uv.dependency-metadata]]
-name = "archetypes"
-version = "0.11.1"
-requires-dist = ["scipy>=1.8,<1.15"]
+# NOTE: an `archetypes` dependency-metadata override lived here, mirroring the one in
+# manylatents. `dependency-metadata` is applied by the RESOLVING project, so deleting it
+# upstream does not propagate — it had to go in both places. It hand-declared the wheel's
+# requirements as scipy-only, which uv trusts, so archetypes installed without opt-einsum and
+# pykronecker and `import archetypes` failed at runtime. See manylatents 393c695.
 
 [[tool.uv.dependency-metadata]]
 name = "magnipy"
