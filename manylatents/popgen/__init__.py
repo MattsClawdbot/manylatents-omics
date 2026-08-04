@@ -9,7 +9,7 @@ metrics, and visualizations. Includes support for:
 """
 
 # Export popgen-specific modules
-from . import data, metrics, callbacks, utils
+from . import callbacks, data, metrics, utils
 
 __version__ = "0.1.0"
 

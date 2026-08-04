@@ -1,6 +1,7 @@
 import logging
-import numpy as np
 from typing import Optional
+
+import numpy as np
 from manylatents.algorithms.latent.latent_module_base import LatentModule
 
 logger = logging.getLogger(__name__)

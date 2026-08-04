@@ -13,10 +13,8 @@ def test_omics_package_import():
 
 def test_data_module_imports():
     """Test that all data classes can be imported."""
-    from manylatents.popgen.data import (
-        ManifoldGeneticsDataset,
-        ManifoldGeneticsDataModule,
-    )
+    from manylatents.popgen.data import (ManifoldGeneticsDataModule,
+                                         ManifoldGeneticsDataset)
 
     assert ManifoldGeneticsDataset is not None
     assert ManifoldGeneticsDataModule is not None
@@ -24,13 +22,11 @@ def test_data_module_imports():
 
 def test_metrics_module_imports():
     """Test that all metrics can be imported."""
-    from manylatents.popgen.metrics import (
-        GeographicPreservation,
-        AdmixturePreservation,
-        SampleId,
-    )
     # GroundTruthPreservation moved to core manylatents.metrics.preservation
     from manylatents.metrics.preservation import GroundTruthPreservation
+
+    from manylatents.popgen.metrics import (AdmixturePreservation,
+                                            GeographicPreservation, SampleId)
 
     # Verify they're all callable
     assert callable(GeographicPreservation)
@@ -42,13 +38,13 @@ def test_metrics_module_imports():
 def test_namespace_package_structure():
     """Test that omics is properly set up as a namespace package."""
     import manylatents.popgen
-    
+
     # Check that expected modules exist
     assert hasattr(manylatents.popgen, 'data')
     assert hasattr(manylatents.popgen, 'metrics')
     assert hasattr(manylatents.popgen, 'callbacks')
     assert hasattr(manylatents.popgen, 'utils')
-    
+
     # Check __all__ exports
     assert 'data' in manylatents.popgen.__all__
     assert 'metrics' in manylatents.popgen.__all__
@@ -57,10 +53,10 @@ def test_namespace_package_structure():
 def test_core_manylatents_accessible():
     """Test that core manylatents can still be imported when omics is installed."""
     # This verifies namespace packages don't break core imports
+    import manylatents.metrics.trustworthiness as trustworthiness_module
     from manylatents.data.synthetic_dataset import SwissRoll
     from manylatents.data.test_data import TestDataset
-    import manylatents.metrics.trustworthiness as trustworthiness_module
-    
+
     assert SwissRoll is not None
     assert TestDataset is not None
     assert trustworthiness_module is not None
