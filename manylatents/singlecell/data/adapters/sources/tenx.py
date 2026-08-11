@@ -1,19 +1,18 @@
-
 import logging
 from typing import Optional
 
 import pandas as pd
 import scanpy as sc
+from manykinds import LabeledArray
 
 from ..formats.adapters import from_anndata
-from manykinds import LabeledArray
 
 logger = logging.getLogger(__name__)
 
 
 def read_tenx(
     adata_path,
-    metadata = None,
+    metadata=None,
     use_raw: bool = False,
     layer: Optional[str] = None,
     use_time: bool = False,
@@ -89,7 +88,7 @@ def read_tenx(
             f"AnnData at {adata_path} is missing a non-empty 'genome' column in var; "
             f"available columns: {adata.var.columns.tolist()}"
         )
-        
+
     metadata = dict(metadata or {})
     metadata["genome"] = adata.var["genome"].iloc[0]
 

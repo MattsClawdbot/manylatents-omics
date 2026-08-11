@@ -20,10 +20,10 @@ def temp_manifold_dir():
     """Create temporary directory with mock manifold-genetics outputs."""
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir = Path(tmpdir)
-        
+
         # Create sample IDs
         sample_ids = [f"sample_{i:03d}" for i in range(100)]
-        
+
         # Create PCA CSV with correct column names (dim_1, dim_2, etc.)
         pca_data = {
             'sample_id': sample_ids,
@@ -34,7 +34,7 @@ def temp_manifold_dir():
         pca_df = pd.DataFrame(pca_data)
         pca_path = tmpdir / "pca.csv"
         pca_df.to_csv(pca_path, index=False)
-        
+
         # Create Admixture CSVs for K=3 and K=5 (use component_i format)
         admix_k3_data = {
             'sample_id': sample_ids,
@@ -45,15 +45,15 @@ def temp_manifold_dir():
         admix_k3_df = pd.DataFrame(admix_k3_data)
         admix_k3_path = tmpdir / "admix_k3.csv"
         admix_k3_df.to_csv(admix_k3_path, index=False)
-        
+
         admix_k5_data = {
             'sample_id': sample_ids,
-            **{f'component_{i}': np.random.dirichlet([1]*5, 100)[:, i-1] for i in range(1, 6)}
+            **{f'component_{i}': np.random.dirichlet([1] * 5, 100)[:, i - 1] for i in range(1, 6)}
         }
         admix_k5_df = pd.DataFrame(admix_k5_data)
         admix_k5_path = tmpdir / "admix_k5.csv"
         admix_k5_df.to_csv(admix_k5_path, index=False)
-        
+
         # Create Labels CSV
         labels_data = {
             'sample_id': sample_ids,
@@ -65,7 +65,7 @@ def temp_manifold_dir():
         labels_df = pd.DataFrame(labels_data)
         labels_path = tmpdir / "labels.csv"
         labels_df.to_csv(labels_path, index=False)
-        
+
         # Create colormap JSON (nested by label type)
         colormap = {
             'Population': {
@@ -84,7 +84,7 @@ def temp_manifold_dir():
         colormap_path = tmpdir / "colormap.json"
         with open(colormap_path, 'w') as f:
             json.dump(colormap, f)
-        
+
         yield {
             'dir': tmpdir,
             'pca_path': str(pca_path),
@@ -101,10 +101,10 @@ def test_dataset_init_pca_only(temp_manifold_dir):
     dataset = ManifoldGeneticsDataset(
         pca_path=temp_manifold_dir['pca_path'],
     )
-    
+
     assert len(dataset) == 100
     assert dataset.data_array.shape == (100, 3)  # 3 PCs
-    
+
     # Test getting a sample
     sample = dataset[0]
     assert 'data' in sample
@@ -183,13 +183,13 @@ def test_dataset_with_colormap(temp_manifold_dir):
         colormap_path=temp_manifold_dir['colormap_path'],
         label_column='Population',
     )
-    
+
     colormap = dataset.get_colormap()
     assert colormap is not None
     assert len(colormap) == 5  # 5 populations
     assert 'Pop0' in colormap
     assert colormap['Pop0'] == '#FF0000'
-    
+
     # Test with different label column
     dataset2 = ManifoldGeneticsDataset(
         pca_path=temp_manifold_dir['pca_path'],
@@ -197,7 +197,7 @@ def test_dataset_with_colormap(temp_manifold_dir):
         colormap_path=temp_manifold_dir['colormap_path'],
         label_column='Genetic_region',
     )
-    
+
     colormap2 = dataset2.get_colormap()
     assert colormap2 is not None
     assert len(colormap2) == 3  # 3 regions
@@ -212,7 +212,7 @@ def test_dataset_sample_id_alignment(temp_manifold_dir):
         admixture_paths={3: temp_manifold_dir['admix_k3_path']},
         labels_path=temp_manifold_dir['labels_path'],
     )
-    
+
     sample_ids = dataset.get_sample_ids()
     assert len(sample_ids) == 100
     assert sample_ids[0] == 'sample_000'
@@ -225,7 +225,7 @@ def test_dataset_latitude_longitude_properties(temp_manifold_dir):
         pca_path=temp_manifold_dir['pca_path'],
         labels_path=temp_manifold_dir['labels_path'],
     )
-    
+
     assert dataset.latitude is not None
     assert dataset.longitude is not None
     assert len(dataset.latitude) == 100
@@ -241,7 +241,7 @@ def test_dataset_missing_sample_id_column(temp_manifold_dir):
         'dim_2': np.random.randn(10),
     })
     bad_pca_df.to_csv(bad_pca_path, index=False)
-    
+
     with pytest.raises(ValueError, match="must contain 'sample_id' column"):
         ManifoldGeneticsDataset(pca_path=str(bad_pca_path))
 
@@ -274,13 +274,13 @@ def test_dataset_partial_sample_overlap(temp_manifold_dir):
         'dim_2': np.random.randn(100),
     })
     partial_pca_df.to_csv(partial_pca_path, index=False)
-    
+
     # Load with both PCA and labels (overlap is samples 50-99, so 50 samples)
     dataset = ManifoldGeneticsDataset(
         pca_path=str(partial_pca_path),
         labels_path=temp_manifold_dir['labels_path'],
     )
-    
+
     # Should only have overlapping samples
     assert len(dataset) == 50
 

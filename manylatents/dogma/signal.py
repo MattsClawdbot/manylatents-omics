@@ -39,7 +39,7 @@ import numpy as np
 # Canonical layers, in the FIXED order used to lay out the per-variant vector.
 # The `rna` slot is first-class (an Orthrus RNA encoder + sequences_rna.yaml
 # already exist) and is always present even when a variant has no RNA tracks.
-CANONICAL_LAYERS: Tuple[str, ...] = (
+CANONICAL_LAYERS: tuple[str, ...] = (
     "accessibility",  # open-chromatin (ATAC / DNase)
     "tf",             # transcription-factor binding (ChIP-TF)
     "histone",        # histone marks (ChIP-histone)
@@ -52,7 +52,7 @@ CANONICAL_LAYERS: Tuple[str, ...] = (
 # names as `AlphaGenomeEncoder.predict()` returns them (it keys results by
 # `ot.name.lower()`), plus a few obvious aliases. Normalized via
 # `output_type_to_layer` so callers may pass "ATAC", "atac", "RNA_SEQ", etc.
-LAYER_TAXONOMY: Dict[str, str] = {
+LAYER_TAXONOMY: dict[str, str] = {
     # accessibility
     "atac": "accessibility",
     "dnase": "accessibility",
@@ -123,7 +123,7 @@ class VariantKey:
     alt: str
     id: str
 
-    def as_tuple(self) -> Tuple[str, int, str, str, str]:
+    def as_tuple(self) -> tuple[str, int, str, str, str]:
         return (self.chrom, self.pos, self.ref, self.alt, self.id)
 
 
@@ -148,7 +148,7 @@ class SignalRecord:
     variant: VariantKey
     track_id: str
     layer: str
-    cell_type: Optional[str]
+    cell_type: str | None
     delta: float
     effect_pctl: float
     activity_pctl: float
@@ -173,8 +173,8 @@ class TrackMeta:
     to fall back to synthesized ids/None cell types.
     """
 
-    cell_types: Optional[Sequence[Optional[str]]] = None
-    track_ids: Optional[Sequence[str]] = None
+    cell_types: Sequence[str | None] | None = None
+    track_ids: Sequence[str] | None = None
 
 
 def _collapse_positions(arr: np.ndarray, how: str) -> np.ndarray:
@@ -232,11 +232,11 @@ def build_signal_records(
     variant: VariantKey,
     ref_pred: Mapping[str, np.ndarray],
     alt_pred: Mapping[str, np.ndarray],
-    track_meta: Optional[Mapping[str, TrackMeta]] = None,
+    track_meta: Mapping[str, TrackMeta] | None = None,
     reduce: str = "mean",
-    effect_background: Optional[np.ndarray] = None,
-    activity_background: Optional[np.ndarray] = None,
-) -> List[SignalRecord]:
+    effect_background: np.ndarray | None = None,
+    activity_background: np.ndarray | None = None,
+) -> list[SignalRecord]:
     """Build SignalRecords for one variant from an AlphaGenome-like pred pair.
 
     ``ref_pred`` / ``alt_pred`` mirror ``AlphaGenomeEncoder.predict()`` output:
@@ -271,9 +271,9 @@ def build_signal_records(
 
     # First pass: per (output_type, track) collect delta + ref activity so the
     # percentiles can be ranked across the whole variant's track population.
-    raw: List[dict] = []
-    deltas: List[float] = []
-    activities: List[float] = []
+    raw: list[dict] = []
+    deltas: list[float] = []
+    activities: list[float] = []
 
     for output_type, ref_arr in ref_pred.items():
         if output_type not in alt_pred:
@@ -349,7 +349,7 @@ def build_signal_records(
 # Fixed per-layer aggregation. Signed mean keeps direction; max-abs keeps the
 # strongest track effect; pctl means summarize rank. Fixed width => same shape
 # for every variant, so the geometry engine sees a regular grid.
-LAYER_STATS: Tuple[str, ...] = (
+LAYER_STATS: tuple[str, ...] = (
     "delta_mean",
     "delta_maxabs",
     "effect_pctl_mean",
@@ -376,13 +376,13 @@ def reduce_layer_vector(records: Sequence[SignalRecord]) -> np.ndarray:
     return vec
 
 
-def reduce_variant_layers(records: Sequence[SignalRecord]) -> Dict[str, np.ndarray]:
+def reduce_variant_layers(records: Sequence[SignalRecord]) -> dict[str, np.ndarray]:
     """Per-variant reducer: {layer -> (LAYER_VECTOR_DIM,)} for ALL layers.
 
     Every canonical layer is present (zeros when the variant has no such track),
     so downstream shape is fixed and the ``rna`` slot is always first-class.
     """
-    by_layer: Dict[str, List[SignalRecord]] = {ly: [] for ly in CANONICAL_LAYERS}
+    by_layer: dict[str, list[SignalRecord]] = {ly: [] for ly in CANONICAL_LAYERS}
     for r in records:
         by_layer[r.layer].append(r)
     return {ly: reduce_layer_vector(by_layer[ly]) for ly in CANONICAL_LAYERS}
@@ -401,7 +401,7 @@ def reduce_variant_vector(records: Sequence[SignalRecord]) -> np.ndarray:
 
 def stack_layer_matrix(
     records: Sequence[SignalRecord],
-) -> Tuple[List[str], Dict[str, np.ndarray]]:
+) -> tuple[list[str], dict[str, np.ndarray]]:
     """Stack records across variants into a fusion-ready channel dict.
 
     Returns:
@@ -412,8 +412,8 @@ def stack_layer_matrix(
         row ``i`` aligns across all layers for the same variant.
     """
     # Preserve first-seen variant order.
-    variant_ids: List[str] = []
-    grouped: Dict[str, List[SignalRecord]] = {}
+    variant_ids: list[str] = []
+    grouped: dict[str, list[SignalRecord]] = {}
     for r in records:
         vid = r.variant.id
         if vid not in grouped:
@@ -421,7 +421,7 @@ def stack_layer_matrix(
             variant_ids.append(vid)
         grouped[vid].append(r)
 
-    channels: Dict[str, np.ndarray] = {ly: [] for ly in CANONICAL_LAYERS}
+    channels: dict[str, np.ndarray] = {ly: [] for ly in CANONICAL_LAYERS}
     for vid in variant_ids:
         per_layer = reduce_variant_layers(grouped[vid])
         for ly in CANONICAL_LAYERS:
@@ -446,7 +446,7 @@ def stack_layer_matrix(
 # maps, via LAYER_TAXONOMY, onto exactly these canonical layers. Keeping the
 # scalar as a reduction of SignalRecords means the grid value equals a collapse
 # of the per-layer manifold — one Δ definition (log2FC), one source of truth.
-SCALAR_DELTA_LAYERS: Tuple[str, ...] = ("cage", "rna", "splice")
+SCALAR_DELTA_LAYERS: tuple[str, ...] = ("cage", "rna", "splice")
 
 
 def variant_scalar_delta(

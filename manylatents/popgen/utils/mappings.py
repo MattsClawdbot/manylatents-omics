@@ -1,7 +1,3 @@
-import copy
-import numpy as np
-from matplotlib.colors import ListedColormap
-
 # Omics/Genetics-specific color mappings
 # Moved from manylatents core to keep genomics-specific functionality in the omics extension
 
@@ -85,7 +81,7 @@ cmap_pop = {
     'Palestinian': 'grey',
     'Melanesian': 'yellow',
     'Papuan': 'yellow',
-          }
+}
 
 # UKBB
 cmap_ukbb_pops = {
@@ -138,15 +134,15 @@ cmap_ukbb_superpops = {
 }
 
 cmap_mhi_superpops = {
-    "Black":            "#228B22",   # forest green
-    "Caucasian":        "#9370DB",   # medium purple
-    "Asian":            "#1E90FF",   # dodger blue
-    "Hispanic":         "#FF4500",   # orange-red
-    "Native American":  "#8B0000",   # dark red / maroon
+    "Black": "#228B22",   # forest green
+    "Caucasian": "#9370DB",   # medium purple
+    "Asian": "#1E90FF",   # dodger blue
+    "Hispanic": "#FF4500",   # orange-red
+    "Native American": "#8B0000",   # dark red / maroon
 
     # catch-alls
-    "Other":            "#808080",   # medium gray (similar to "MID")
-    "Unlabelled":       "#D3D3D3",   # light gray (like "Do not know")
+    "Other": "#808080",   # medium gray (similar to "MID")
+    "Unlabelled": "#D3D3D3",   # light gray (like "Do not know")
 }
 
 # AoU
@@ -237,7 +233,7 @@ cmap_hgdp_aou_intersection = {
     'Mongolian': 'blue',
     'Mbuti': 'green',
     'Bougainville': 'yellow'
-          }
+}
 
 # Define race to color mapping
 race_ethnicity_only_pca_colors = {
@@ -247,7 +243,7 @@ race_ethnicity_only_pca_colors = {
     "Middle Eastern or North African": "#80461B",
     "Hispanic or Latino": "#41C9F8",
     "White": "#FFA000",
-    "More than one population": "#26867d", #"#9E9E9E",
+    "More than one population": "#26867d",  # "#9E9E9E",
     "No information": "#e8e8e8"
 }
 
@@ -259,7 +255,7 @@ race_only_pca_colors = {
     "Middle Eastern or North African": "#80461B",
     "Native Hawaiian or Other Pacific Islander": "#E040FB",
     "No information": "#9E9E9E",
-    "Hispanic or Latino": "#9E9E9E", # hack
+    "Hispanic or Latino": "#9E9E9E",  # hack
     "More than one population": "#26867d",
 }
 
