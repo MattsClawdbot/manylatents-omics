@@ -1,7 +1,8 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 import torch
 from torch import nn
+
 
 # The code is modified from https://github.com/wgchang/DSBN/blob/master/model/dsbn.py
 class _DomainSpecificBatchNorm(nn.Module):
@@ -16,7 +17,7 @@ class _DomainSpecificBatchNorm(nn.Module):
         affine: bool = True,
         track_running_stats: bool = True,
     ):
-        super(_DomainSpecificBatchNorm, self).__init__()
+        super().__init__()
         self._cur_domain = None
         self.num_domains = num_domains
         self.bns = nn.ModuleList(
@@ -68,7 +69,7 @@ class DomainSpecificBatchNorm1d(_DomainSpecificBatchNorm):
     def _check_input_dim(self, input: torch.Tensor):
         if input.dim() > 3:
             raise ValueError(
-                "expected at most 3D input (got {}D input)".format(input.dim())
+                f"expected at most 3D input (got {input.dim()}D input)"
             )
 
 
@@ -79,4 +80,4 @@ class DomainSpecificBatchNorm2d(_DomainSpecificBatchNorm):
 
     def _check_input_dim(self, input: torch.Tensor):
         if input.dim() != 4:
-            raise ValueError("expected 4D input (got {}D input)".format(input.dim()))
+            raise ValueError(f"expected 4D input (got {input.dim()}D input)")
