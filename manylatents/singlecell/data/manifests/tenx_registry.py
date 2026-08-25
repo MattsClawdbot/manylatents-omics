@@ -36,6 +36,7 @@ _DEFAULT_10X_MANIFEST = Path(__file__).with_name("datasets_10x.csv")
 # Matches a wget URL ending in .h5 inside the spreadsheet's wget_commands column.
 _H5_URL_RE = re.compile(r"https?://\S+?\.h5\b")
 
+
 def _parse_bool(value: str | None) -> bool:
     """Parse a manifest ``Use_Time`` cell: strictly ``TRUE`` or ``FALSE``.
 
@@ -113,6 +114,8 @@ def load_tenx_manifest(path: Path | None = None) -> list[TenxDatasetEntry]:
     return entries
 
 # used for loader tests
+
+
 def select_random_tenx(
     n: int = 5, *, seed: int | None = None, path: Path | None = None
 ) -> list[TenxDatasetEntry]:

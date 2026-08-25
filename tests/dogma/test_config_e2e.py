@@ -5,10 +5,10 @@ No GPU required. Tests config composition and YAML structure only.
 Does NOT import torch-dependent modules.
 """
 
-import pytest
-from omegaconf import OmegaConf
 from pathlib import Path
 
+import pytest
+from omegaconf import OmegaConf
 
 # Path to dogma configs
 CONFIGS_DIR = Path(__file__).parent.parent.parent / "manylatents" / "dogma" / "configs"
