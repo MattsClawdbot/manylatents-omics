@@ -10,12 +10,11 @@ References:
     - PyPI: https://pypi.org/project/evo2/
 """
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import torch
-from torch import Tensor
-
 from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
+from torch import Tensor
 
 
 class Evo2Encoder(FoundationEncoder):

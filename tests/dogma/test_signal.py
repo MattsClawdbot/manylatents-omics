@@ -7,21 +7,14 @@ required -- numpy + pytest only.
 import numpy as np
 import pytest
 
-from manylatents.dogma.signal import (
-    CANONICAL_LAYERS,
-    LAYER_VECTOR_DIM,
-    SCALAR_DELTA_LAYERS,
-    SignalRecord,
-    TrackMeta,
-    UnknownOutputTypeError,
-    VariantKey,
-    build_signal_records,
-    output_type_to_layer,
-    reduce_variant_layers,
-    reduce_variant_vector,
-    stack_layer_matrix,
-    variant_scalar_delta,
-)
+from manylatents.dogma.signal import (CANONICAL_LAYERS, LAYER_VECTOR_DIM,
+                                      SCALAR_DELTA_LAYERS, SignalRecord,
+                                      TrackMeta, UnknownOutputTypeError,
+                                      VariantKey, build_signal_records,
+                                      output_type_to_layer,
+                                      reduce_variant_layers,
+                                      reduce_variant_vector,
+                                      stack_layer_matrix, variant_scalar_delta)
 
 
 def _synthetic_ag_output(seed: int, n_pos: int = 8):

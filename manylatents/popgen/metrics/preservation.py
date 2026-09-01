@@ -3,18 +3,13 @@ from typing import Optional, Union
 
 import numpy as np
 import pandas as pd
-from scipy.spatial.distance import pdist, squareform
-
 from manylatents.algorithms.latent.latent_module_base import LatentModule
-from manylatents.utils.metrics import (
-    compute_geodesic_distances,
-    haversine_vectorized,
-)
 # Import core preservation functions from manylatents
-from manylatents.metrics.preservation import (
-    preservation_metric,
-    _scale_embedding_dimensions,
-)
+from manylatents.metrics.preservation import (_scale_embedding_dimensions,
+                                              preservation_metric)
+from manylatents.utils.metrics import (compute_geodesic_distances,
+                                       haversine_vectorized)
+from scipy.spatial.distance import pdist, squareform
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +66,7 @@ def compute_geographic_metric(
 ##############################################################################
 # 3) Admixture-based Metrics
 ##############################################################################
+
 
 def compute_continental_admixture_metric_dists(
     ancestry_coords,
@@ -180,7 +176,7 @@ def compute_quality_metrics(
     """
     metrics_dict = {
         "geographic_preservation": compute_geographic_metric(
-            ancestry_coords, latitude, longitude, 
+            ancestry_coords, latitude, longitude,
             use_medians=False, only_far=False,
             subset_to_test_on=subset_to_test_on
         ),
@@ -238,6 +234,7 @@ def GeographicPreservation(embeddings: np.ndarray,
         subset_to_test_on=dataset.geographic_preservation_indices,
         **kwargs
     )
+
 
 def AdmixturePreservation(embeddings: np.ndarray,
                           dataset,

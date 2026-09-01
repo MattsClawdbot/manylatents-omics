@@ -63,7 +63,6 @@ def download_pbmc_10k(output_path):
 
 
 def download_dataset(dataset, output_dir, force=False):
-
     """Download and save a specific PBMC dataset."""
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -138,20 +137,20 @@ def main():
         datasets_to_download = [args.dataset]
 
     for dataset in datasets_to_download:
-        logger.info(f"\n{'='*60}")
+        logger.info(f"\n{'=' * 60}")
         logger.info(f"Processing PBMC {dataset} dataset")
-        logger.info(f"{'='*60}")
+        logger.info(f"{'=' * 60}")
         download_dataset(dataset, args.output_dir, args.force)
 
-    logger.info("\n" + "="*60)
+    logger.info("\n" + "=" * 60)
     logger.info("Done! Downloaded datasets are ready to use with AnnDataModule.")
     logger.info(f"Location: {args.output_dir}")
-    logger.info("="*60)
+    logger.info("=" * 60)
 
     # Add note about full PBMC 68k
-    logger.info("\n" + "="*60)
+    logger.info("\n" + "=" * 60)
     logger.info("NOTE: Full PBMC 68k Dataset")
-    logger.info("="*60)
+    logger.info("=" * 60)
     logger.info("The downloaded 68k dataset is a reduced version with ~700 cells.")
     logger.info("For the full 68,000-cell dataset:")
     logger.info("  1. Download from: https://www.10xgenomics.com/datasets/fresh-68-k-pbm-cs-donor-a-1-standard-1-1-0")
@@ -160,7 +159,7 @@ def main():
     logger.info("       import scanpy as sc")
     logger.info("       adata = sc.read_10x_h5('filtered_gene_bc_matrices_h5.h5')")
     logger.info("       adata.write_h5ad('data/single_cell/pbmc_68k_full.h5ad')")
-    logger.info("="*60)
+    logger.info("=" * 60)
 
 
 if __name__ == "__main__":

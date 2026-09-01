@@ -25,7 +25,8 @@ def _make_trajectory_adata(n_cells=300, n_genes=100, seed=42):
 
 class TestEmbeddingAudit:
     def test_run_returns_complement_results(self):
-        from manylatents.singlecell.analysis.embedding_audit import EmbeddingAudit
+        from manylatents.singlecell.analysis.embedding_audit import \
+            EmbeddingAudit
         adata = _make_trajectory_adata()
         audit = EmbeddingAudit(
             setting_a={"n_neighbors": 5, "min_dist": 0.01},
@@ -41,7 +42,8 @@ class TestEmbeddingAudit:
         assert "setting_b_clusters" in results
 
     def test_run_preserves_embeddings(self):
-        from manylatents.singlecell.analysis.embedding_audit import EmbeddingAudit
+        from manylatents.singlecell.analysis.embedding_audit import \
+            EmbeddingAudit
         adata = _make_trajectory_adata()
         audit = EmbeddingAudit(
             setting_a={"n_neighbors": 5, "min_dist": 0.01},

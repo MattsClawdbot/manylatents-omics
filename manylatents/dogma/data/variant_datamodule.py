@@ -35,7 +35,7 @@ from lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset
 
 
-def load_fasta(fasta_path: Path) -> Dict[str, str]:
+def load_fasta(fasta_path: Path) -> dict[str, str]:
     """Load FASTA file into {id: sequence} dict."""
     sequences = {}
     current_id = None
@@ -85,7 +85,7 @@ def _revcomp(seq: str) -> str:
 
 def find_variant_in_rna(
     rna_seq: str, dna_seq: str, ref: str, context_size: int = 15
-) -> Optional[tuple]:
+) -> tuple | None:
     """Find the variant position in gene-level mRNA using DNA context.
 
     The DNA FASTA is centered on the variant (±8192bp) on the plus strand.
@@ -133,7 +133,7 @@ def find_variant_in_rna(
 class VariantPairDataset(Dataset):
     """Dataset of (wt_seq, mut_seq, label) tuples."""
 
-    def __init__(self, wt_seqs: List[str], mut_seqs: List[str], labels: List[int]):
+    def __init__(self, wt_seqs: list[str], mut_seqs: list[str], labels: list[int]):
         self.wt_seqs = wt_seqs
         self.mut_seqs = mut_seqs
         self.labels = labels
@@ -179,14 +179,14 @@ class VariantDataModule(LightningDataModule):
 
     def __init__(
         self,
-        variants_dir: Union[str, Path],
-        sequences_dir: Union[str, Path],
+        variants_dir: str | Path,
+        sequences_dir: str | Path,
         variant_type: str,
         modality: str,
         batch_size: int = 32,
-        max_variants: Optional[int] = None,
-        max_seq_length: Optional[int] = None,
-        valid_variants_file: Optional[Union[str, Path]] = None,
+        max_variants: int | None = None,
+        max_seq_length: int | None = None,
+        valid_variants_file: str | Path | None = None,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -200,17 +200,17 @@ class VariantDataModule(LightningDataModule):
         self.max_seq_length = max_seq_length
         self.valid_variants_file = Path(valid_variants_file) if valid_variants_file else None
 
-        self._wt_seqs: List[str] = []
-        self._mut_seqs: List[str] = []
-        self._labels: List[int] = []
-        self._variant_ids: List[str] = []
-        self._metadata: Dict[str, List] = {}
+        self._wt_seqs: list[str] = []
+        self._mut_seqs: list[str] = []
+        self._labels: list[int] = []
+        self._variant_ids: list[str] = []
+        self._metadata: dict[str, list] = {}
 
         # Required by manylatents experiment.py (line 215)
         self.train_dataset = None
         self.test_dataset = None
 
-    def setup(self, stage: Optional[str] = None):
+    def setup(self, stage: str | None = None):
         """Load variant metadata and sequences."""
         # Load variant TSV
         tsv_path = self.variants_dir / f"{self.variant_type}.tsv"
@@ -323,7 +323,7 @@ class VariantDataModule(LightningDataModule):
 
         n_diff = sum(1 for w, m in zip(self._wt_seqs, self._mut_seqs) if w != m)
         print(f"Variants with {self.modality} sequence change: "
-              f"{n_diff}/{len(self._wt_seqs)} ({100*n_diff/len(self._wt_seqs):.1f}%)"
+              f"{n_diff}/{len(self._wt_seqs)} ({100 * n_diff / len(self._wt_seqs):.1f}%)"
               if self._wt_seqs else "")
 
         # Required by experiment.py: datamodule.train_dataset.data.shape
@@ -331,7 +331,7 @@ class VariantDataModule(LightningDataModule):
         self.train_dataset = dataset
         self.test_dataset = dataset
 
-    def get_sequence_pairs(self) -> Dict[str, List[str]]:
+    def get_sequence_pairs(self) -> dict[str, list[str]]:
         """Return paired WT/MUT sequences for encoding.
 
         Returns:
@@ -339,7 +339,7 @@ class VariantDataModule(LightningDataModule):
         """
         return {"wt": self._wt_seqs, "mut": self._mut_seqs}
 
-    def get_sequences(self) -> Dict[str, List[str]]:
+    def get_sequences(self) -> dict[str, list[str]]:
         """Return sequences as channels for BatchEncoder compatibility."""
         return self.get_sequence_pairs()
 
@@ -347,11 +347,11 @@ class VariantDataModule(LightningDataModule):
         """Return pathogenicity labels (0=benign, 1=pathogenic)."""
         return np.array(self._labels, dtype=np.int64)
 
-    def get_variant_ids(self) -> List[str]:
+    def get_variant_ids(self) -> list[str]:
         """Return list of variant IDs in order."""
         return self._variant_ids
 
-    def get_metadata(self) -> Dict[str, List]:
+    def get_metadata(self) -> dict[str, list]:
         """Return metadata dict aligned with variant order."""
         return self._metadata
 

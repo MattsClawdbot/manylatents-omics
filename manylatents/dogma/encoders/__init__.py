@@ -12,10 +12,11 @@ the actual model weights are loaded when encode() is first called.
 """
 
 from manylatents.algorithms.latent.foundation_encoder import FoundationEncoder
+
+from .alphagenome import AlphaGenomeEncoder
+from .esm import ESMEncoder
+from .esm3 import ESM3Encoder
 from .evo2 import Evo2Encoder
 from .orthrus_native import OrthrusNativeEncoder as OrthrusEncoder
-from .esm3 import ESM3Encoder
-from .esm import ESMEncoder
-from .alphagenome import AlphaGenomeEncoder
 
 __all__ = ["FoundationEncoder", "Evo2Encoder", "OrthrusEncoder", "ESM3Encoder", "ESMEncoder", "AlphaGenomeEncoder"]
