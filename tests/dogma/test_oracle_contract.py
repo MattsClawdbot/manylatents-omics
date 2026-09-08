@@ -17,14 +17,8 @@ from typing import NamedTuple, Optional, Sequence
 
 import pytest
 
-from manylatents.dogma.oracles import (
-    SIGNAL_LAYERS,
-    SignalOracle,
-    get_oracle,
-    list_oracles,
-    register_oracle,
-)
-
+from manylatents.dogma.oracles import (SIGNAL_LAYERS, SignalOracle, get_oracle,
+                                       list_oracles, register_oracle)
 
 # --- Stand-ins for the #26 signal-schema types (test-local only) -----------
 
@@ -64,7 +58,7 @@ class DummyOracle:
         self,
         variant: Variant,
         *,
-        layers: Optional[Sequence[str]] = None,
+        layers: Sequence[str] | None = None,
     ) -> Sequence[StubSignalRecord]:
         wanted = set(layers) if layers is not None else set(self.layers)
         records = []

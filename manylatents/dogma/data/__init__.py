@@ -12,19 +12,10 @@ Future home for:
     - gnomAD population data
 """
 
-from .sequence_dataset import (
-    SequenceDataset,
-    SequenceDataModule,
-    TEST_SEQUENCES,
-)
-from .central_dogma_dataset import (
-    CentralDogmaDataModule,
-    CentralDogmaDataset,
-)
-from .clinvar_dataset import (
-    ClinVarDataModule,
-    ClinVarDataset,
-)
+from .central_dogma_dataset import CentralDogmaDataModule, CentralDogmaDataset
+from .clinvar_dataset import ClinVarDataModule, ClinVarDataset
+from .sequence_dataset import (TEST_SEQUENCES, SequenceDataModule,
+                               SequenceDataset)
 from .variant_datamodule import VariantDataModule
 
 __all__ = [

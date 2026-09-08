@@ -24,16 +24,8 @@ shortlist.
 
 from __future__ import annotations
 
-from typing import (
-    TYPE_CHECKING,
-    Dict,
-    List,
-    Optional,
-    Protocol,
-    Sequence,
-    Type,
-    runtime_checkable,
-)
+from typing import (TYPE_CHECKING, Dict, List, Optional, Protocol, Sequence,
+                    Type, runtime_checkable)
 
 if TYPE_CHECKING:
     # Owned by the #26 signal-schema milestone. Referenced by name only so the
@@ -94,10 +86,10 @@ class SignalOracle(Protocol):
 
     def score_variant(
         self,
-        variant: "Variant",
+        variant: Variant,
         *,
-        layers: Optional[Sequence[str]] = None,
-    ) -> "Sequence[SignalRecord]":
+        layers: Sequence[str] | None = None,
+    ) -> Sequence[SignalRecord]:
         """Emit one ``SignalRecord`` per (variant, track).
 
         Args:
@@ -118,7 +110,7 @@ class SignalOracle(Protocol):
 # and register themselves on import.
 # ---------------------------------------------------------------------------
 
-_ORACLE_REGISTRY: Dict[str, Type["SignalOracle"]] = {}
+_ORACLE_REGISTRY: dict[str, type[SignalOracle]] = {}
 
 
 def register_oracle(name: str):
@@ -130,7 +122,7 @@ def register_oracle(name: str):
         ...     ...
     """
 
-    def _decorator(cls: Type["SignalOracle"]) -> Type["SignalOracle"]:
+    def _decorator(cls: type[SignalOracle]) -> type[SignalOracle]:
         key = name.lower()
         existing = _ORACLE_REGISTRY.get(key)
         if existing is not None and existing is not cls:
@@ -143,7 +135,7 @@ def register_oracle(name: str):
     return _decorator
 
 
-def get_oracle(name: str) -> Type["SignalOracle"]:
+def get_oracle(name: str) -> type[SignalOracle]:
     """Return a registered oracle class by name (case-insensitive)."""
     key = name.lower()
     if key not in _ORACLE_REGISTRY:
@@ -153,7 +145,7 @@ def get_oracle(name: str) -> Type["SignalOracle"]:
     return _ORACLE_REGISTRY[key]
 
 
-def list_oracles() -> List[str]:
+def list_oracles() -> list[str]:
     """Return the sorted names of all registered oracles."""
     return sorted(_ORACLE_REGISTRY)
 

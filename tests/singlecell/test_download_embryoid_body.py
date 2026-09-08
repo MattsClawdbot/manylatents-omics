@@ -13,6 +13,7 @@ ad = pytest.importorskip("anndata")
 pytest.importorskip("scanpy")
 
 import h5py
+
 import manylatents.omics_plugin  # Register the data-path resolver.
 from manylatents.singlecell.data import AnnDataset
 from scripts import download_embryoid_body as eb

@@ -66,7 +66,7 @@ def _row_sums(counts: Any) -> np.ndarray:
     return np.asarray(counts.sum(axis=1)).ravel()
 
 
-def _as_adata(counts: Any, gene_names: Optional[Sequence] = None):
+def _as_adata(counts: Any, gene_names: Sequence | None = None):
     """A COPY of ``counts`` as AnnData, for the scanpy calls that write in place.
 
     The copy is the whole point — see the module docstring. ``float32`` because scanpy's
@@ -104,8 +104,8 @@ def filter_cells(
     counts: Any,
     *,
     min_genes: int = 200,
-    pct_library_size: Optional[float] = None,
-    groups: Optional[Sequence] = None,
+    pct_library_size: float | None = None,
+    groups: Sequence | None = None,
 ) -> np.ndarray:
     """Which cells survive — by genes detected, or by a library-size percentile.
 
@@ -186,7 +186,7 @@ def filter_mito(
     return pct <= float(max_pct)
 
 
-def detect_doublets(counts: Any, *, threshold: Optional[float] = None,
+def detect_doublets(counts: Any, *, threshold: float | None = None,
                     random_state: int = 0) -> np.ndarray:
     """Which cells are likely doublets. Returns ``is_doublet`` — ``True`` means SUSPECT.
 
